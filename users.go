@@ -40,25 +40,12 @@ func main() {
 
 	for {
 		fmt.Println("🎭 - {Bem-vindo ao teatro das máscaras!} ")
-		var name string
-		var age string
 
-		fmt.Println("🪪 - Seu Nome: ")
-		name, _ = reader.ReadString('\n')
-		name = strings.TrimSpace(name)
-
-		fmt.Println("🪪 - Sua Idade: ")
-		age, _ = reader.ReadString('\n')
-		age = strings.TrimSpace(age)
-
-		nameValid, ok := validName(name)
+		nameValid, age , ok := readSpectator(reader)
 		if !ok {
 			continue
 		}
 
-		spectators := make(map[string]string)
-		spectators["name"] = nameValid
-		spectators["age"] = age
 		menu(nameValid)
 
 		var input string
@@ -72,24 +59,23 @@ func main() {
 		}
 
 		var playName string
-		ageInt, _ := strconv.Atoi(spectators["age"])
 
 		if choice == 1 {
 			playName = "sombras do silêncio"
-			playOk := manageChoosedPlay(reader, ageInt, playA, plays, playName)
+			playOk := manageChoosedPlay(reader, age, playA, plays, playName)
 			if !playOk {
 				continue
 			}
 			
 		} else if choice == 2 {
 			playName = "o último ato"
-			playOk := manageChoosedPlay(reader, ageInt, playB, plays, playName)
+			playOk := manageChoosedPlay(reader, age, playB, plays, playName)
 			if !playOk {
 				continue
 			}
 		}else if choice == 3 {
 			playName = "entre cortinas" 
-			playOk := manageChoosedPlay(reader, ageInt, playC, plays, playName)
+			playOk := manageChoosedPlay(reader, age, playC, plays, playName)
 			if !playOk {
 				continue
 			}
@@ -102,6 +88,34 @@ func main() {
 		}
 	}
 }
+
+func readSpectator(reader *bufio.Reader) (string, int, bool){
+	var name string
+	var age string
+
+	fmt.Println("🪪 - Seu Nome: ")
+	name, _ = reader.ReadString('\n')
+	name = strings.TrimSpace(name)
+
+	fmt.Println("🪪 - Sua Idade: ")
+	age, _ = reader.ReadString('\n')
+	age = strings.TrimSpace(age)
+	ageInt, err := strconv.Atoi(age)
+	if err != nil {
+		return "", 0, false
+	}
+	nameValid, ok := validName(name)
+		if !ok {
+			return nameValid, ageInt, false
+		}
+
+		spectators := make(map[string]string)
+		spectators["name"] = nameValid
+		spectators["age"] = age
+
+		return nameValid, ageInt, true
+}
+
 
 func manageChoosedPlay(reader *bufio.Reader, age int, playA int, plays map[string][]string, playName string) bool{
 	if  age < playA {
