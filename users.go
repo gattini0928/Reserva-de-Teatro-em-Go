@@ -76,45 +76,22 @@ func main() {
 
 		if choice == 1 {
 			playName = "sombras do silêncio"
-			if  ageInt < playA {
-				fmt.Println("🪪 - Desculpe a peça Sombras do Silêncio é para maiores de 16 anos")
+			playOk := manageChoosedPlay(reader, ageInt, playA, plays, playName)
+			if !playOk {
 				continue
-			} else {
-				playIsEmpty := checkIfPlaysIsEmpty(plays, playName)
-				if playIsEmpty {
-					fmt.Printf("😢 os acentos para a peça (%s) foram esgotados. \n", strings.ToUpper(playName))
-					continue
-				}
-				seat := chooseSeat(reader, playName, plays)
-				reserveSeat(seat, plays, playName)
 			}
+			
 		} else if choice == 2 {
 			playName = "o último ato"
-			if ageInt < playB {
-				fmt.Println("🪪 Desculpe a peça O Último Ato é para maiores de 18 anos")
+			playOk := manageChoosedPlay(reader, ageInt, playB, plays, playName)
+			if !playOk {
 				continue
-			} else {
-				playIsEmpty := checkIfPlaysIsEmpty(plays, playName)
-				if playIsEmpty {
-					fmt.Printf("😢 os acentos para a peça (%s) foram esgotados. \n", strings.ToUpper(playName))
-					continue
-				}
-				seat := chooseSeat(reader, playName, plays)
-				reserveSeat(seat, plays, playName)
 			}
 		}else if choice == 3 {
 			playName = "entre cortinas" 
-			if ageInt < playC {
-				fmt.Println("🪪 Desculpe a peça Entre Cortinas é para maiores de 12 anos")
+			playOk := manageChoosedPlay(reader, ageInt, playC, plays, playName)
+			if !playOk {
 				continue
-			} else {
-				playIsEmpty := checkIfPlaysIsEmpty(plays, playName)
-				if playIsEmpty {
-					fmt.Printf("😢 os acentos para a peça (%s) foram esgotados. \n", strings.ToUpper(playName))
-					continue
-				}				
-				seat := chooseSeat(reader, playName, plays)
-				reserveSeat(seat, plays, playName)
 			}
 		}else if choice == 4 {
 			fmt.Printf("🖐️- Volte sempre %s!", nameValid)
@@ -126,11 +103,23 @@ func main() {
 	}
 }
 
-func checkIfPlaysIsEmpty(plays map[string][]string, playName string) bool {
-	if len(plays[playName]) == 0 {
-		return false
-	}
+func manageChoosedPlay(reader *bufio.Reader, age int, playA int, plays map[string][]string, playName string) bool{
+	if  age < playA {
+		fmt.Println("🪪 - Desculpe a peça Sombras do Silêncio é para maiores de 16 anos")
+			return false
+		} else {
+				if !hasAvaibleSeats(plays, playName) {
+					fmt.Printf("😢 os acentos para a peça (%s) foram esgotados. \n", strings.ToUpper(playName))
+					return false
+				}
+				seat := chooseSeat(reader, playName, plays)
+				reserveSeat(seat, plays, playName)
+			}
 	return true
+}
+
+func hasAvaibleSeats(plays map[string][]string, playName string) bool {
+	return len(plays[playName]) > 0
 }
 
 func menu(nameValid string) {
