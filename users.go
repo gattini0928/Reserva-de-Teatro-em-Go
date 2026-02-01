@@ -117,9 +117,9 @@ func readSpectator(reader *bufio.Reader) (string, int, bool){
 }
 
 
-func manageChoosedPlay(reader *bufio.Reader, age int, playA int, plays map[string][]string, playName string) bool{
-	if  age < playA {
-		fmt.Println("🪪 - Desculpe a peça Sombras do Silêncio é para maiores de 16 anos")
+func manageChoosedPlay(reader *bufio.Reader, age int, agePerm int, plays map[string][]string, playName string) bool{
+	if  age < agePerm {
+		fmt.Printf("🪪 - Desculpe a peça %s é para maiores de %d anos \n", strings.ToUpper(playName), agePerm)
 			return false
 		} else {
 				if !hasAvaibleSeats(plays, playName) {
